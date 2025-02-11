@@ -1,75 +1,109 @@
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import Home from "./Home";
 import VegItems from "./VegItems";
 import Cart from "./Cart";
-import Aboutus from "./AboutUs";
-import ContactUs from "./ContactUs";
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-import { useDispatch, useSelector } from "react-redux";
 import Login from "./Login";
-
 import Orders from "./Orders";
 import { logout } from "./Store";
 import Milk from "./MilkItems";
 import Nonveg from "./NonvegItems";
 import Notfound from "./NotFound";
+import Aboutus from "./Aboutus";
+import Contactus from "./Contactus";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import "./App.css";
 
 function App() {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cart || []);
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-  let auth = useSelector((state) => state.auth);
-  let isAuthenticated = auth.isAuthenticated;
-  let user = auth.user;
-  let dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth || {});
+  const { isAuthenticated, user } = auth;
+  const dispatch = useDispatch();
 
   return (
-    <BrowserRouter>
+    <Router>
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
         <div className="container-fluid">
-          <Link to="/home" className="navbar-brand">FreshMart</Link>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <Link to="/home" className="navbar-brand">
+            <i className="fa-solid fa-store"></i> FreshMart
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-                <Link to="/home" className="nav-link text-white">Home</Link>
-              </li>
               <li className="nav-item">
-                <Link to="/veg" className="nav-link text-white">Veg Items</Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/nonveg" className="nav-link text-white">Non-Veg Items</Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/milk" className="nav-link text-white">Milk Items</Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/cart" className="nav-link text-white">
-                  Cart <sup><span className="badge bg-warning text-dark">{totalItems}</span></sup>
+                <Link to="/home" className="nav-link text-white">
+                  <i className="fa-solid fa-house"></i> Home
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/orders" className="nav-link text-white">Orders</Link>
+                <Link to="/veg" className="nav-link text-white">
+                  <i className="fa-solid fa-carrot"></i> Veg Items
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/aboutus" className="nav-link text-white">About Us</Link>
+                <Link to="/nonveg" className="nav-link text-white">
+                  <i className="fa-solid fa-drumstick-bite"></i> Non-Veg Items
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contactus" className="nav-link text-white">Contact Us</Link>
+                <Link to="/milk" className="nav-link text-white">
+                  <i className="fa-solid fa-glass-water"></i> Milk Items
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/cart" className="nav-link text-white">
+                  <i className="fa-solid fa-shopping-cart"></i> Cart{" "}
+                  <sup>
+                    <span className="badge bg-warning text-dark">{totalItems}</span>
+                  </sup>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/orders" className="nav-link text-white">
+                  <i className="fa-solid fa-box"></i> Orders
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/aboutus" className="nav-link text-white">
+                  <i className="fa-solid fa-info-circle"></i> About Us
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/contactus" className="nav-link text-white">
+                  <i className="fa-solid fa-phone"></i> Contact Us
+                </Link>
               </li>
             </ul>
             <div className="d-flex">
               {isAuthenticated ? (
                 <>
-                  <span className="navbar-text text-white me-3">Welcome, {user}</span>
-                  <button onClick={() => dispatch(logout())} className="btn btn-outline-light">Logout</button>
+                  <span className="navbar-text text-white me-3">
+                    <i className="fa-solid fa-user"></i> Welcome, {user}
+                  </span>
+                  <button
+                    onClick={() => dispatch(logout())}
+                    className="btn btn-outline-light"
+                  >
+                    <i className="fa-solid fa-sign-out-alt"></i> Logout
+                  </button>
                 </>
               ) : (
-                <Link to="/login" className="btn btn-outline-light">Login</Link>
+                <Link to="/login" className="btn btn-outline-light">
+                  <i className="fa-solid fa-sign-in-alt"></i> Login
+                </Link>
               )}
             </div>
           </div>
@@ -79,18 +113,18 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/home" element={<Home />} />
-          <Route path="/veg" element={<VegItems/>}/>
+          <Route path="/veg" element={<VegItems />} />
           <Route path="/nonveg" element={<Nonveg />} />
-          <Route path="/milk" element={<Milk/>} />
+          <Route path="/milk" element={<Milk />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/aboutus" element={<Aboutus />} />
-          <Route path="/contactus" element={<ContactUs />} />
+          <Route path="/contactus" element={<Contactus />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Notfound />}/>
+          <Route path="*" element={<Notfound />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </Router>
   );
 }
 

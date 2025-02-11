@@ -2,97 +2,58 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   clearCart,
   decrement,
-  increament,
-  purchaseList,
+  increment, // ✅ Fixed function name to match Store.js export
   removeFromCart,
+  addPurchase, // ✅ Corrected function name to match Store.js export
 } from "./Store.js";
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Cart() {
-  let dispatch = useDispatch();
-  let cartItems = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart);
 
-  let finalItems = cartItems.map((item, index) => (
-    <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-      <span>
-        {item.name} - <strong>&#8377;{item.price}</strong>
-      </span>
-      <div>
-        <button
-          onClick={() => dispatch(increament(item))}
-          className="btn btn-success btn-sm me-2"
-        >
-          +
-        </button>
-        <span>Quantity: {item.quantity}</span>
-        <button
-          onClick={() => dispatch(decrement(item))}
-          className="btn btn-warning btn-sm ms-2"
-        >
-          -
-        </button>
-        <button
-          onClick={() => dispatch(removeFromCart(item))}
-          className="btn btn-danger btn-sm ms-2"
-        >
-          Remove
-        </button>
-      </div>
-    </li>
-  ));
-
-  let totalPrice = cartItems.reduce(
+  const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
   );
 
-  let [discountPercentage, setDiscountPercentage] = useState(0);
-  let [discountApplied, setDiscountApplied] = useState(false);
+  const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [discountApplied, setDiscountApplied] = useState(false);
+  const discountAmount = (totalPrice * discountPercentage) / 100;
 
-  let discountAmount = (totalPrice * discountPercentage) / 100;
-  let finalAmount = totalPrice - discountAmount;
+  const [couponCode, setCouponCode] = useState("");
+  const [couponDiscountPercentage, setCouponDiscountPercentage] = useState(0);
+  const [couponApplied, setCouponApplied] = useState(false);
 
-  let [couponCode, setCouponCode] = useState("");
-  let [couponDiscountPercentage, setCouponDiscountPercentage] = useState(0);
-  let [couponApplied, setCouponApplied] = useState(false);
-
-  let handleCoupon = () => {
-    switch (couponCode.toUpperCase()) {
-      case "RATAN10":
-        setCouponDiscountPercentage(10);
-        setCouponApplied(true);
-        break;
-      case "RATAN20":
-        setCouponDiscountPercentage(20);
-        setCouponApplied(true);
-        break;
-      case "RATAN30":
-        setCouponDiscountPercentage(30);
-        setCouponApplied(true);
-        break;
-      case "RATAN40":
-        setCouponDiscountPercentage(40);
-        setCouponApplied(true);
-        break;
-      default:
-        alert("Invalid Coupon code");
-        setCouponDiscountPercentage(0);
-        setCouponApplied(false);
+  const handleCoupon = () => {
+    const coupons = {
+      RATAN10: 10,
+      RATAN20: 20,
+      RATAN30: 30,
+      RATAN40: 40,
+    };
+    
+    if (coupons[couponCode.toUpperCase()]) {
+      setCouponDiscountPercentage(coupons[couponCode.toUpperCase()]);
+      setCouponApplied(true);
+    } else {
+      alert("Invalid Coupon Code");
+      setCouponDiscountPercentage(0);
+      setCouponApplied(false);
     }
   };
 
-  let couponAmount = (totalPrice * couponDiscountPercentage) / 100;
-  finalAmount = finalAmount - couponAmount;
+  const finalAmount = totalPrice - discountAmount - (totalPrice * couponDiscountPercentage) / 100;
 
-  let handlePurchase = () => {
-    let purchaseDate = new Date().toLocaleDateString();
-    let purchaseItems = {
+  const handlePurchase = () => {
+    const purchaseDate = new Date().toLocaleDateString();
+    const purchasedData = {
       items: [...cartItems],
       finalPrice: finalAmount,
       date: purchaseDate,
     };
-    dispatch(purchaseList(purchaseItems));
+    dispatch(addPurchase(purchasedData)); // ✅ Updated function call
     dispatch(clearCart());
   };
 
@@ -100,7 +61,39 @@ function Cart() {
     <div className="container mt-4">
       {cartItems.length > 0 ? (
         <div className="card p-4 shadow-sm">
-          <ul className="list-group mb-3">{finalItems}</ul>
+          <ul className="list-group mb-3">
+            {cartItems.map((item, index) => (
+              <li
+                key={index}
+                className="list-group-item d-flex justify-content-between align-items-center"
+              >
+                <span>
+                  {item.name} - <strong>&#8377;{item.price}</strong>
+                </span>
+                <div>
+                  <button
+                    onClick={() => dispatch(increment(item))}
+                    className="btn btn-success btn-sm me-2"
+                  >
+                    +
+                  </button>
+                  <span>Quantity: {item.quantity}</span>
+                  <button
+                    onClick={() => dispatch(decrement(item))}
+                    className="btn btn-warning btn-sm ms-2"
+                  >
+                    -
+                  </button>
+                  <button
+                    onClick={() => dispatch(removeFromCart(item))}
+                    className="btn btn-danger btn-sm ms-2"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
           <p className="fw-bold">Total Price: &#8377;{totalPrice}</p>
 
           {discountApplied && (
@@ -111,33 +104,18 @@ function Cart() {
           )}
 
           <div className="btn-group mb-3">
-            <button
-              onClick={() => {
-                setDiscountPercentage(10);
-                setDiscountApplied(true);
-              }}
-              className="btn btn-outline-primary"
-            >
-              Apply 10% Discount
-            </button>
-            <button
-              onClick={() => {
-                setDiscountPercentage(20);
-                setDiscountApplied(true);
-              }}
-              className="btn btn-outline-secondary"
-            >
-              Apply 20% Discount
-            </button>
-            <button
-              onClick={() => {
-                setDiscountPercentage(30);
-                setDiscountApplied(true);
-              }}
-              className="btn btn-outline-success"
-            >
-              Apply 30% Discount
-            </button>
+            {[10, 20, 30].map((discount) => (
+              <button
+                key={discount}
+                onClick={() => {
+                  setDiscountPercentage(discount);
+                  setDiscountApplied(true);
+                }}
+                className="btn btn-outline-primary"
+              >
+                Apply {discount}% Discount
+              </button>
+            ))}
           </div>
 
           <div className="mb-3">
@@ -156,7 +134,7 @@ function Cart() {
           {couponApplied && (
             <div className="alert alert-success">
               <p>Your Coupon Code: {couponCode}</p>
-              <p>Your Coupon Amount: &#8377;{couponAmount}</p>
+              <p>Your Coupon Amount: &#8377;{(totalPrice * couponDiscountPercentage) / 100}</p>
             </div>
           )}
 
