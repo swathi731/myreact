@@ -8,7 +8,7 @@ import Orders from "./Orders";
 import { logout } from "./Store";
 import Milk from "./MilkItems";
 import Nonveg from "./NonvegItems";
-import Notfound from "./NotFound";
+import Notfound from "./Notfound";
 import Aboutus from "./Aboutus";
 import Contactus from "./Contactus";
 import "bootstrap/dist/css/bootstrap.min.css";
