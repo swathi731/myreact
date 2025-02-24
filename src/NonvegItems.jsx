@@ -12,14 +12,41 @@ function Nonveg() {
   const [pageNumber, setPageNumber] = useState(1);
   const totalPages = Math.ceil(nonVegItems.length / perPage);
 
+  // Search State
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Calculate Items for Current Page
   const pageStartIndex = (pageNumber - 1) * perPage;
-  const currentItems = nonVegItems.slice(pageStartIndex, pageStartIndex + perPage);
+
+  // Filter items based on search query
+  const filteredItems = nonVegItems.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentItems = filteredItems.slice(pageStartIndex, pageStartIndex + perPage);
+  
+  const totalFilteredPages = Math.ceil(filteredItems.length / perPage);
 
   return (
     <div className="container-fluid py-5" style={{ minHeight: "calc(100vh - 56px)" }}>
-      {/* This ensures the container height adjusts to the full screen height minus the navbar */}
       <h1 className="text-center mb-4 text-danger fw-bold">Non-Veg Delights</h1>
+
+      {/* Search Bar */}
+      <div className="d-flex justify-content-center mb-4">
+        <input
+          type="text"
+          placeholder="Search for non-veg items..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="form-control w-50 p-3 rounded-pill shadow-lg"
+          style={{
+            borderColor: '#dc3545',
+            backgroundColor: '#f1f1f1',
+            fontSize: '1.1rem',
+            borderWidth: '2px',
+          }}
+        />
+      </div>
 
       {/* Items Grid */}
       <div className="row">
@@ -57,7 +84,7 @@ function Nonveg() {
           <i className="fa-solid fa-arrow-left"></i> Previous
         </button>
 
-        {Array.from({ length: totalPages }, (_, index) => (
+        {Array.from({ length: totalFilteredPages }, (_, index) => (
           <button
             key={index}
             onClick={() => setPageNumber(index + 1)}
@@ -70,7 +97,7 @@ function Nonveg() {
         <button
           onClick={() => setPageNumber(pageNumber + 1)}
           className="btn btn-primary mx-2 rounded-pill px-4 py-2 shadow-sm"
-          disabled={pageNumber === totalPages}
+          disabled={pageNumber === totalFilteredPages}
         >
           Next <i className="fa-solid fa-arrow-right"></i>
         </button>

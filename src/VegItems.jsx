@@ -12,13 +12,41 @@ function VegItems() {
   const [pageNumber, setPageNumber] = useState(1);
   const totalPages = Math.ceil(vegItems.length / perPage);
 
+  // Search State
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Calculate Items for Current Page
   const pageStartIndex = (pageNumber - 1) * perPage;
-  const currentItems = vegItems.slice(pageStartIndex, pageStartIndex + perPage);
+  
+  // Filter items based on search query
+  const filteredItems = vegItems.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentItems = filteredItems.slice(pageStartIndex, pageStartIndex + perPage);
+  
+  const totalFilteredPages = Math.ceil(filteredItems.length / perPage);
 
   return (
-    <div className="container-fluid py-5 px-4"> {/* Use container-fluid for full width */}
+    <div className="container-fluid py-5 px-4">
       <h1 className="text-center mb-4 text-success fw-bold">Fresh Veg Items</h1>
+
+      {/* Search Bar */}
+      <div className="d-flex justify-content-center mb-4">
+        <input
+          type="text"
+          placeholder="Search for fresh veggies..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="form-control w-50 p-3 rounded-pill shadow-lg"
+          style={{
+            borderColor: '#28a745',
+            backgroundColor: '#f1f1f1',
+            fontSize: '1.1rem',
+            borderWidth: '2px',
+          }}
+        />
+      </div>
 
       {/* Items Grid */}
       <div className="row">
@@ -56,7 +84,7 @@ function VegItems() {
           <i className="fa-solid fa-arrow-left"></i> Previous
         </button>
 
-        {Array.from({ length: totalPages }, (_, index) => (
+        {Array.from({ length: totalFilteredPages }, (_, index) => (
           <button
             key={index}
             onClick={() => setPageNumber(index + 1)}
@@ -69,7 +97,7 @@ function VegItems() {
         <button
           onClick={() => setPageNumber(pageNumber + 1)}
           className="btn btn-primary mx-2 rounded-pill px-4 py-2 shadow-sm"
-          disabled={pageNumber === totalPages}
+          disabled={pageNumber === totalFilteredPages}
         >
           Next <i className="fa-solid fa-arrow-right"></i>
         </button>

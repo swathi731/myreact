@@ -13,6 +13,9 @@ function Milk() {
   const [pageNumber, setPageNumber] = useState(1);
   const totalPages = Math.ceil(milkItems.length / perPage);
 
+  // Search State
+  const [searchQuery, setSearchQuery] = useState("");
+
   // Function to handle page changes (Prev, Next, Page Buttons)
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -20,9 +23,16 @@ function Milk() {
     }
   };
 
+  // Filter items based on search query
+  const filteredItems = milkItems.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // Get items for the current page
   const pageStartIndex = (pageNumber - 1) * perPage;
-  const currentItems = milkItems.slice(pageStartIndex, pageStartIndex + perPage);
+  const currentItems = filteredItems.slice(pageStartIndex, pageStartIndex + perPage);
+
+  const totalFilteredPages = Math.ceil(filteredItems.length / perPage);
 
   return (
     <div
@@ -32,6 +42,23 @@ function Milk() {
       }}
     >
       <h1 className="text-center mb-4 text-success fw-bold">Milk Products</h1>
+
+      {/* Search Bar */}
+      <div className="d-flex justify-content-center mb-4">
+        <input
+          type="text"
+          placeholder="Search for milk products..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="form-control w-50 p-3 rounded-pill shadow-lg"
+          style={{
+            borderColor: '#28a745',
+            backgroundColor: '#f1f1f1',
+            fontSize: '1.1rem',
+            borderWidth: '2px',
+          }}
+        />
+      </div>
 
       {/* Items Grid */}
       <div className="row">
@@ -66,7 +93,7 @@ function Milk() {
       </div>
 
       {/* Pagination Controls */}
-      {totalPages > 1 && (
+      {totalFilteredPages > 1 && (
         <div className="mt-3 d-flex justify-content-center">
           {/* Previous Button */}
           <button
@@ -78,7 +105,7 @@ function Milk() {
           </button>
 
           {/* Page Number Buttons */}
-          {Array.from({ length: totalPages }, (_, index) => (
+          {Array.from({ length: totalFilteredPages }, (_, index) => (
             <button
               key={index}
               onClick={() => handlePageChange(index + 1)}
@@ -94,7 +121,7 @@ function Milk() {
           <button
             onClick={() => handlePageChange(pageNumber + 1)}
             className="btn btn-info mx-2 rounded-pill px-4 py-2 shadow-sm"
-            disabled={pageNumber === totalPages} // Disable if last page
+            disabled={pageNumber === totalFilteredPages} // Disable if last page
           >
             Next <i className="fa-solid fa-arrow-right"></i>
           </button>
@@ -105,3 +132,4 @@ function Milk() {
 }
 
 export default Milk;
+G
