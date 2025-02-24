@@ -132,4 +132,3 @@ function Milk() {
 }
 
 export default Milk;
-G
