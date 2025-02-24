@@ -37,7 +37,7 @@ const productsSlice = createSlice({
       { name: "Broccoli", price: 120, image: "/broccoli.jpeg" },
     ], 
     nonveg: [
-      { name: "Chicken", price: 240,image:"/chicken.jpeg" },
+      { name: "Chicken", price: 240,image:"/chicken24.jpeg" },
       { name: "Fish", price: 450,image:"/fishes.jpeg" },
       { name: "Mutton", price: 890,image:"/mutton.jpeg" },
       { name: "Prawns", price: 500,image:"/prawns.jpeg" },
@@ -69,7 +69,7 @@ const productsSlice = createSlice({
       { name: "Chicken Liver", price: 350,image:"/chicken liver.jpeg" },
     ],
     milk: [
-      { name: "Jersey", price: 32,image:"/jersey.jpeg" },
+      { name: "Jersey", price: 32,image:"/jersey24.jpeg" },
       { name: "Heritage", price: 31 ,image:"/heritage.jpeg"},
       { name: "Sangam", price: 34,image:"/sangam.jpeg" },
       { name: "Amul Gold", price: 60,image:"/amulgold.jpeg" },

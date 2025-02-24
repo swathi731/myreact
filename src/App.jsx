@@ -8,9 +8,10 @@ import Orders from "./Orders";
 import { logout } from "./Store";
 import Milk from "./MilkItems";
 import Nonveg from "./NonvegItems";
-import Notfound from "./Notfound";
 import Aboutus from "./Aboutus";
 import Contactus from "./Contactus";
+import Notfound from "./NotFound";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./App.css";
@@ -25,9 +26,9 @@ function App() {
 
   return (
     <Router>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-lg">
         <div className="container-fluid">
-          <Link to="/home" className="navbar-brand">
+          <Link to="/home" className="navbar-brand text-warning">
             <i className="fa-solid fa-store"></i> FreshMart
           </Link>
           <button
@@ -44,45 +45,45 @@ function App() {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link to="/home" className="nav-link text-white">
+                <Link to="/home" className="nav-link text-light">
                   <i className="fa-solid fa-house"></i> Home
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/veg" className="nav-link text-white">
+                <Link to="/veg" className="nav-link text-success">
                   <i className="fa-solid fa-carrot"></i> Veg Items
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/nonveg" className="nav-link text-white">
+                <Link to="/nonveg" className="nav-link text-danger">
                   <i className="fa-solid fa-drumstick-bite"></i> Non-Veg Items
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/milk" className="nav-link text-white">
+                <Link to="/milk" className="nav-link text-info">
                   <i className="fa-solid fa-glass-water"></i> Milk Items
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/cart" className="nav-link text-white">
+                <Link to="/cart" className="nav-link text-warning">
                   <i className="fa-solid fa-shopping-cart"></i> Cart{" "}
                   <sup>
-                    <span className="badge bg-warning text-dark">{totalItems}</span>
+                    <span className="badge bg-light text-dark">{totalItems}</span>
                   </sup>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/orders" className="nav-link text-white">
+                <Link to="/orders" className="nav-link text-primary">
                   <i className="fa-solid fa-box"></i> Orders
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/aboutus" className="nav-link text-white">
+                <Link to="/aboutus" className="nav-link text-info">
                   <i className="fa-solid fa-info-circle"></i> About Us
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contactus" className="nav-link text-white">
+                <Link to="/contactus" className="nav-link text-light">
                   <i className="fa-solid fa-phone"></i> Contact Us
                 </Link>
               </li>
@@ -90,18 +91,18 @@ function App() {
             <div className="d-flex">
               {isAuthenticated ? (
                 <>
-                  <span className="navbar-text text-white me-3">
+                  <span className="navbar-text text-light me-3">
                     <i className="fa-solid fa-user"></i> Welcome, {user}
                   </span>
                   <button
                     onClick={() => dispatch(logout())}
-                    className="btn btn-outline-light"
+                    className="btn btn-outline-danger"
                   >
                     <i className="fa-solid fa-sign-out-alt"></i> Logout
                   </button>
                 </>
               ) : (
-                <Link to="/login" className="btn btn-outline-light">
+                <Link to="/login" className="btn btn-outline-success">
                   <i className="fa-solid fa-sign-in-alt"></i> Login
                 </Link>
               )}
@@ -112,6 +113,7 @@ function App() {
 
       <div className="container">
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/veg" element={<VegItems />} />
           <Route path="/nonveg" element={<Nonveg />} />
