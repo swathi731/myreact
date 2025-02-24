@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 function Home() {
   return (
-    <div className="container-fluid py-5 px-4">  {/* Use container-fluid for full width */}
+    <div className="container-fluid py-5 px-4">  
       {/* Header Section */}
       <div className="text-center mb-5">
         <h1 className="display-2 text-primary fw-bold">Welcome to FreshMart</h1>
